@@ -66,6 +66,8 @@ class Trainer():
                     timer_data.release()))
 
             timer_data.tic()
+            if self.args.nst == 1:
+                break
 
         self.loss.end_log(len(self.loader_train))
         self.error_last = self.loss.log[-1, -1]
@@ -100,6 +102,8 @@ class Trainer():
 
                     if self.args.save_results:
                         self.ckp.save_results(d, filename[0], save_list, scale)
+                    if self.args.nst == 1:
+                        break
 
                 self.ckp.log[-1, idx_data, idx_scale] /= len(d)
                 best = self.ckp.log.max(0)
@@ -112,6 +116,10 @@ class Trainer():
                         best[1][idx_data, idx_scale] + 1
                     )
                 )
+                if self.args.nst == 1:
+                    break
+            if self.args.nst == 1:
+                break
 
         self.ckp.write_log('Forward: {:.2f}s\n'.format(timer_test.toc()))
         self.ckp.write_log('Saving...')
